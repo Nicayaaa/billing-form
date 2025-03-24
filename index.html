@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Delivery Tool - Billing & Order Formatter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="manifest" href="/manifest.json" />
+</head>
+<body>
+
+  <div class="container">
+    <div class="logo-container">
+      <img src="image.png" alt="Delivery Tool Logo" class="logo">
+    </div>
+    <div class="toggle-btns">
+      <button id="orderBtn" class="active"> Order Form</button>
+      <button id="billingBtn">Billing Form</button>
+    </div>
+  
+    <div class="form-layout">
+      <!-- Order Form -->
+      <div id="orderForm" class="form-section active">
+        <h2>Order Form</h2>
+
+      <label for="type">Type of Task:</label>
+      <select id="type">
+        <option value="pickup">📦 Pick Up</option>
+        <option value="grocery">🛒 Grocery</option>
+        <option value="hardware">🔧 Hardware</option>
+        <option value="bills">💸 Pay Bills</option>
+        <option value="cash">💰 Cash In / Out</option>
+        <option value="utos">📝 Misc. Task</option>
+      </select>
+
+      <label for="storeName">Store Name:</label>
+    <input type="text" id="storeName" placeholder="">
+
+    <label for="orderList">Order List:</label>
+    <textarea id="orderList" rows="3" placeholder=""></textarea>
+
+    <label for="dropName">Drop To (Name):</label>
+    <input type="text" id="dropName" placeholder="">
+
+    <label for="contact"><strong>Contact Number:</strong></label>
+    <div class="contact-container">
+      <input type="text" id="contact" value="+63" maxlength="13" oninput="formatContactNumber(this)">
+    </div>
+
+    <label for="address">Address:</label>
+    <textarea id="address" rows="2" placeholder=""></textarea>
+
+    <label for="landmark">Landmark / Notes:</label>
+    <textarea id="landmark" rows="2" placeholder=""></textarea>
+
+    <label for="roomNote">Room / Floor Info:</label>
+    <input type="text" id="roomNote" placeholder="">
+
+    <label for="riderCode">Rider Code (DC#):</label>
+    <input type="text" id="riderCode" placeholder="">
+
+      <!-- Button to trigger generateOrder() -->
+    <button id="generateOrderBtn">Generate Order Message</button>
+
+    <div id="orderOutput">
+      <h3>Order Preview:</h3>
+      <pre id="generatedOrder" class="order-preview"></pre>
+    </div>
+    </div>
+  
+      <!-- Billing Form -->
+      <div id="billingForm" class="form-section" style="display: none;">
+        <h2>Billing Form</h2>
+        <label>Item Amount:</label>
+        <input type="number" id="itemAmount" placeholder="₱">
+  
+        <label for="taskType">Type of Task:</label>
+        <select id="taskType">
+          <option value="pickup">📦 Pick Up</option>
+          <option value="grocery">🛒 Grocery</option>
+          <option value="hardware">🔧 Hardware</option>
+          <option value="bills">💸 Pay Bills</option>
+          <option value="cash">💰 Cash In / Out</option>
+          <option value="utos">📝 Misc. Task</option>
+        </select>
+  
+        <label>Heavy (Yes = +10):</label>
+        <select id="heavy">
+          <option value="0">No</option>
+          <option value="10">Yes</option>
+        </select>
+  
+        <label>Delivery Charge:</label>
+        <input type="number" id="deliveryCharge" placeholder="₱">
+  
+        <label>Add Store Charge:</label>
+        <select id="storeCharge">
+          <option value="0">₱0 (No extra store)</option>
+          <option value="10">₱10 (1 extra store)</option>
+          <option value="20">₱20 (2 extra stores)</option>
+          <option value="30">₱30 (3 extra stores)</option>
+          <option value="40">₱40 (4 extra stores)</option>
+          <option value="50">₱50 (5 extra stores)</option>
+        </select>
+  
+        <label>Add Waiting Time (minutes):</label>
+        <input type="number" id="waitingTime" placeholder="Enter minutes">
+  
+        <label>Money Transact Charge:</label>
+        <input type="number" id="transactCharge" placeholder="₱">
+  
+        <label for="riderNameBilling">Rider:</label>
+        <input type="text" id="riderNameBilling" list="riderList" placeholder="Enter rider's name">
+        <datalist id="riderList">
+          <!-- Rider names go here -->
+        </datalist>
+        <button onclick="generateBill()">Generate Bill</button>
+
+        <div id="billOutput">
+          <h3>Total:</h3>
+          <div id="output">
+            <!-- Output will be generated here -->
+          </div>
+        
+          <!-- Add a button for uploading a proof of delivery image (QR Code or any image) -->
+          <div>
+            <button id="uploadImageBtn">
+              <i class="fas fa-camera"></i> <!-- Camera icon -->
+            </button>
+            <input type="file" id="imageInput" style="display: none;" accept="image/*" onchange="previewImage(event)">
+          </div>
+        
+          <!-- Container to display the uploaded image -->
+          <div id="imagePreviewContainer" style="margin-top: 20px;">
+            <h4>Proof of Delivery Image:</h4>
+            <img id="imagePreview" src="" alt="Uploaded Image" style="max-width: 200px; display: none;">
+                      <!-- Copy Text and Share Button (initially hidden) -->
+          <button id="copyAndSendBtn" onclick="copyAndSendReceipt()">Copy Text & Share</button>
+          </div>
+        </div>
+        
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="script.js"></script>
+</body>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js').then((registration) => {
+      console.log('Service Worker registered with scope:', registration.scope);
+    }).catch((error) => {
+      console.log('Service Worker registration failed:', error);
+    });
+  }
+</script>
+</html>

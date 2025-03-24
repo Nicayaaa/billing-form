@@ -1,0 +1,153 @@
+/* === Global Font Styling === */
+* {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  
+  /* === Base Styling === */
+  body {
+    padding: 20px;
+    background: #d8d8d8;
+  }
+  
+  /* === Container for Form === */
+  .container {
+    max-width: 500px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ccc;
+  }
+  
+  /* === Labels === */
+  label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  /* === Unified Input Styles === */
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 8px 12px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  /* === Logo Styling === */
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px; /* Adjust space between logo and form */
+  }
+  
+  .logo {
+    max-width: 150px; /* Adjust the size of the logo */
+    height: auto;
+  }
+  
+  /* === Contact Number Prefix Styling === */
+  .contact-container {
+    position: relative;
+  }
+  
+  .contact-container::before {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: #555;
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  
+  /* === Buttons === */
+  button {
+    margin-top: 15px;
+    padding: 10px;
+    background: #c67c4e;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 14px;
+  }
+  
+/* === Toggle Buttons (if any) === */
+.toggle-btns {
+    display: flex; /* Aligns buttons side by side */
+    gap: 10px; /* Optional: adds space between the buttons */
+}
+
+.toggle-btns button {
+    margin: 0 5px;
+    background: #eee;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    transition: background 0.3s ease, color 0.3s ease, font-weight 0.3s ease; /* Add transition for smooth change */
+}
+
+.toggle-btns button.active {
+    background: #C67C4E;
+    color: white;
+    font-weight: bold;
+}
+  
+  /* === Preview Box (Optional) === */
+  pre.order-preview {
+    background: #f3f3f3;
+    padding: 15px;
+    margin-top: 20px;
+    white-space: pre-wrap;
+    border-radius: 6px;
+    border: 1px dashed #b8b8b8;
+    font-size: 14px;
+    line-height: 1.6;
+    word-break: break-word;
+  }
+  
+  /* === Error Field Highlighting === */
+  input.error,
+  select.error {
+    border: 2px solid red;
+    background-color: #ffe6e6;
+  }
+  
+  input.error::placeholder {
+    color: red;
+  }
+  
+/* === Form Elements Transition === */
+input[type="text"], input[type="email"], input[type="number"], select, textarea {
+    transition: opacity 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+    opacity: 1; /* Keeps opacity at 100% on focus */
+}
+
+#uploadImageBtn {
+    border: none;
+    cursor: pointer;
+    max-width: min-content;
+    color: white;
+    float: right;
+  }
+
+#uploadImageBtn i {
+    font-size: 18px; /* Icon size */
+    margin-right: 8px; /* Adds space between the icon and any potential text */
+    
+  }
+  

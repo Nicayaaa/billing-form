@@ -1,0 +1,30 @@
+{
+  "name": "billing-form",
+  "version": "1.0.0",
+  "description": "A simple billing form website where users can fill in their details and submit.",
+  "main": "index.js",
+  "scripts": {
+    "start": "live-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/billing-form.git"
+  },
+  "keywords": [
+    "billing",
+    "form",
+    "web"
+  ],
+  "author": "Arnica",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/your-username/billing-form/issues"
+  },
+  "homepage": "https://github.com/your-username/billing-form#readme",
+  "dependencies": {
+    "@capacitor/core": "^7.1.0"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.0"
+  }
+}
