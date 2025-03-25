@@ -169,62 +169,27 @@ function generateOrder() {
 //#################################################################
 
 // Function to show the button after the order is generated
-function copyAndSendBillingReceipt() {
+// Function to copy the billing receipt text
+function copyBillingReceiptText() {
   const receiptText = document.getElementById('output').innerText.trim();
-  const imageInput = document.getElementById('imageInput');
-  
+
   if (!receiptText) {
     alert('Error: The receipt details are empty. Please generate a receipt first.');
     return;
   }
 
-  if (!imageInput.files.length) {
-    alert('Please select an image before copying.');
-    return;
-  }
-
-  const file = imageInput.files[0];
-  const reader = new FileReader();
-
-  reader.onload = function(event) {
-    const img = new Image();
-    img.src = event.target.result;
-
-    img.onload = function() {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      
-      // Resize image to make Base64 smaller
-      const maxWidth = 300; // Reduce width
-      const scale = maxWidth / img.width;
-      canvas.width = maxWidth;
-      canvas.height = img.height * scale;
-      
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      
-      // Convert to Base64 (JPEG format for smaller size)
-      const fileType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
-      const resizedBase64 = canvas.toDataURL(fileType, 0.7);
-
-      // Combine text and image in a single copyable format
-      const finalContent = `${receiptText}\n\n[Image below]\n${resizedBase64}`;
-
-      // Copy to clipboard
-      navigator.clipboard.writeText(finalContent).then(() => {
-        alert('✅ Receipt text and resized image copied successfully!');
-      }).catch(err => {
-        alert('❌ Failed to copy receipt. Please try again.');
-        console.error('Clipboard error:', err);
-      });
-    };
-  };
-
-  reader.readAsDataURL(file);
+  // Copy text to clipboard
+  navigator.clipboard.writeText(receiptText).then(() => {
+    alert('✅ Receipt text copied successfully!');
+  }).catch(err => {
+    alert('❌ Failed to copy receipt. Please try again.');
+    console.error('Clipboard error:', err);
+  });
 }
 
 // Ensure the event listener is added only once
-document.getElementById('copyAndSendBtn')?.removeEventListener('click', copyAndSendBillingReceipt);
-document.getElementById('copyAndSendBtn')?.addEventListener('click', copyAndSendBillingReceipt);
+document.getElementById('copyAndSendBtn')?.removeEventListener('click', copyBillingReceiptText);
+document.getElementById('copyAndSendBtn')?.addEventListener('click', copyBillingReceiptText);
 
 //#################################################################################
 

@@ -123,20 +123,6 @@
           <div id="output">
             <!-- Output will be generated here -->
           </div>
-        
-          <!-- Add a button for uploading a proof of delivery image (QR Code or any image) -->
-          <div>
-            <button id="uploadImageBtn">
-              <i class="fas fa-camera"></i> <!-- Camera icon -->
-            </button>
-            <input type="file" id="imageInput" style="display: none;" accept="image/*" onchange="previewImage(event)">
-          </div>
-        
-          <!-- Container to display the uploaded image -->
-          <div id="imagePreviewContainer" style="margin-top: 20px;">
-            <h4>Proof of Delivery Image:</h4>
-            <img id="imagePreview" src="" alt="Uploaded Image" style="max-width: 200px; display: none;">
-                      <!-- Copy Text and Share Button (initially hidden) -->
           <button id="copyAndSendBtn" onclick="copyAndSendBillingReceipt()">Copy Text & Share</button>
           </div>
         </div>
