@@ -203,7 +203,8 @@ function copyAndSendBillingReceipt() {
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       
       // Convert to Base64 (JPEG format for smaller size)
-      const resizedBase64 = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
+      const fileType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+      const resizedBase64 = canvas.toDataURL(fileType, 0.7);
 
       // Combine text and image in a single copyable format
       const finalContent = `${receiptText}\n\n[Image below]\n${resizedBase64}`;
