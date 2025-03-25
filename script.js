@@ -50,7 +50,7 @@ function loadRiders() {
 // Save a new rider name
 function saveRiderName() {
   const riderInput = document.getElementById("riderNameBilling");
-  const newName = riderInput.value.trim();
+  const newName = capitalize(riderInput.value.trim()); // Capitalize before storing
   if (!newName) return;
 
   let riders = JSON.parse(localStorage.getItem("riders")) || [];
@@ -166,75 +166,138 @@ function generateOrder() {
     printReceipt();
   }
 
-// Function to show the button after the order is generated
-function printReceipt() {
-  console.log("Receipt Generated");
+//#################################################################
 
-  // Show the "Copy Text & Send to Messenger" button after receipt is generated
-  document.getElementById('copyAndSendBtn');
+// Function to show the button after the order is generated
+function copyAndSendBillingReceipt() {
+  const receiptText = document.getElementById('output').innerText.trim();
+  const imageInput = document.getElementById('imageInput');
+  
+  if (!receiptText) {
+    alert('Error: The receipt details are empty. Please generate a receipt first.');
+    return;
+  }
+
+  if (!imageInput.files.length) {
+    alert('Please select an image before copying.');
+    return;
+  }
+
+  const file = imageInput.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function(event) {
+    const img = new Image();
+    img.src = event.target.result;
+
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      // Resize image to make Base64 smaller
+      const maxWidth = 300; // Reduce width
+      const scale = maxWidth / img.width;
+      canvas.width = maxWidth;
+      canvas.height = img.height * scale;
+      
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      
+      // Convert to Base64 (JPEG format for smaller size)
+      const resizedBase64 = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
+
+      // Combine text and image in a single copyable format
+      const finalContent = `${receiptText}\n\n[Image below]\n${resizedBase64}`;
+
+      // Copy to clipboard
+      navigator.clipboard.writeText(finalContent).then(() => {
+        alert('✅ Receipt text and resized image copied successfully!');
+      }).catch(err => {
+        alert('❌ Failed to copy receipt. Please try again.');
+        console.error('Clipboard error:', err);
+      });
+    };
+  };
+
+  reader.readAsDataURL(file);
 }
 
-// Function to copy text and image, then open share dialog
-function copyAndSendReceipt() {
-  // Get the text content of the receipt
-  const receiptText = document.getElementById('output').innerText;
+// Ensure the event listener is added only once
+document.getElementById('copyAndSendBtn')?.removeEventListener('click', copyAndSendBillingReceipt);
+document.getElementById('copyAndSendBtn')?.addEventListener('click', copyAndSendBillingReceipt);
 
-  // Get the image source (base64 or URL)
-  const image = document.getElementById('imagePreview');
-  const imageURL = image.style.display === 'block' ? image.src : '';
+//#################################################################################
 
-  // Combine text and image URL (base64 or URL) into one message
-  let message = `Receipt Details:\n\n${receiptText}\n\nProof of Delivery Image: ${imageURL}`;
+// Function to copy order receipt and send to Messenger or other apps
+function copyAndSendOrderReceipt() {
+  const orderElement = document.getElementById('generatedOrder');
 
-  // Copy the message to the clipboard
-  navigator.clipboard.writeText(message).then(function() {
-    alert('Receipt copied with image!');
+  // Ensure the order element exists and contains text
+  if (!orderElement || !orderElement.innerText.trim() || orderElement.innerText.trim() === "Order Details:") {
+    if (!window.alertShown) { // Prevent multiple alerts
+      window.alertShown = true;
+      alert('Order details are missing. Please generate an order first.');
+
+      // Reset the flag after a short delay to allow future alerts
+      setTimeout(() => { window.alertShown = false; }, 500);
+    }
+    return;
+  }
+
+  const orderText = orderElement.innerText.trim();
+
+  // Copy the order details to the clipboard
+  navigator.clipboard.writeText(orderText).then(() => {
+    alert('Order details copied successfully!');
 
     // Open the native share dialog after copying
     if (navigator.share) {
       navigator.share({
-        title: 'Receipt and Image',
-        text: message,
-        url: imageURL // Optionally include image URL in the share URL field
+        title: 'Order Receipt',
+        text: orderText
       }).then(() => {
-        console.log('Successfully shared!');
+        console.log('Order details shared successfully!');
       }).catch((error) => {
-        console.error('Error sharing:', error);
+        console.error('Error sharing order details:', error);
       });
     } else {
       alert('Share feature is not supported on this browser.');
     }
-  }).catch(function(err) {
-    alert('Failed to copy: ', err);
+  }).catch((err) => {
+    alert('Failed to copy order details: ' + err);
   });
 }
 
+// Ensure the event listener is added only once
+document.getElementById('copyAndSendOrderBtn2')?.removeEventListener('click', copyAndSendOrderReceipt);
+document.getElementById('copyAndSendOrderBtn2')?.addEventListener('click', copyAndSendOrderReceipt);
+
+//####################################################################################
 
 // Function to trigger file input click on button click
 document.getElementById('uploadImageBtn').addEventListener('click', function() {
-  document.getElementById('imageInput').click(); // Trigger file input when the button is clicked
-});
-
-// Function to trigger file input click on button click
-document.getElementById('uploadImageBtn').addEventListener('click', function() {
-  document.getElementById('imageInput').click(); // Trigger file input when the button is clicked
-});
-
-// Function to preview the uploaded image
-function previewImage(event) {
-  const file = event.target.files[0];
-  const reader = new FileReader();
-
-  reader.onload = function(e) {
-    const imagePreview = document.getElementById('imagePreview');
-    imagePreview.src = e.target.result; // Set image source to the file data URL
-    imagePreview.style.display = 'block'; // Make sure the image is visible
-    
-    // Hide the upload button after the image is uploaded
-    document.getElementById('uploadImageBtn').style.display = 'none';
+  const imageInput = document.getElementById('imageInput');
+  
+  // Prevent multiple clicks from causing duplicate selections
+  if (!imageInput.disabled) {
+    imageInput.click();
   }
+});
+
+// Function to handle image selection and preview
+document.getElementById('imageInput').addEventListener('change', function(event) {
+  const file = event.target.files[0];
+  const imagePreview = document.getElementById('imagePreview');
 
   if (file) {
-    reader.readAsDataURL(file); // Read the uploaded image file
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      imagePreview.src = e.target.result;
+      imagePreview.style.display = "block"; // Ensure the image is visible
+    };
+
+    reader.readAsDataURL(file);
+  } else {
+    imagePreview.style.display = "none"; // Hide preview if no file is selected
   }
-}
+});
